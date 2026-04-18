@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Feliz Aniversário Meu Bem!!</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-background": "#2b1613",
+          "primary-container": "#ee9da8",
+          "tertiary-fixed": "#eedfda",
+          "on-surface-variant": "#4d4635",
+          "surface-tint": "#8c4b55",
+          "surface-container-lowest": "#ffffff",
+          "secondary-container": "#f0e0cc",
+          "inverse-on-surface": "#ffedea",
+          "tertiary": "#675c58",
+          "background": "#fff8f6",
+          "surface-container-low": "#fff0ee",
+          "primary-fixed-dim": "#ffb2bc",
+          "error-container": "#ffdad6",
+          "on-tertiary-container": "#4c433f",
+          "surface-container-highest": "#ffdad4",
+          "on-primary-fixed": "#3a0915",
+          "on-tertiary-fixed-variant": "#4e4541",
+          "secondary-fixed-dim": "#d3c4b1",
+          "primary": "#8c4b55",
+          "on-error-container": "#93000a",
+          "surface-variant": "#ffdad4",
+          "on-secondary": "#ffffff",
+          "surface-container-high": "#ffe2dd",
+          "on-primary-container": "#6e323d",
+          "primary-fixed": "#ffd9dd",
+          "surface-bright": "#fff8f6",
+          "surface-container": "#ffe9e5",
+          "on-secondary-fixed": "#221a0e",
+          "error": "#ba1a1a",
+          "on-tertiary-fixed": "#211a17",
+          "inverse-primary": "#ffb2bc",
+          "on-secondary-fixed-variant": "#4f4537",
+          "tertiary-fixed-dim": "#d2c4be",
+          "outline-variant": "#d0c5af",
+          "inverse-surface": "#422a26",
+          "secondary": "#675d4d",
+          "outline": "#7f7663",
+          "on-secondary-container": "#6e6353",
+          "surface": "#fff8f6",
+          "surface-dim": "#f8d1cb",
+          "on-surface": "#2b1613",
+          "tertiary-container": "#beb0ab",
+          "secondary-fixed": "#f0e0cc",
+          "on-error": "#ffffff",
+          "on-tertiary": "#ffffff",
+          "on-primary-fixed-variant": "#70343e",
+          "on-primary": "#ffffff"
+        },
+        borderRadius: {
+          DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"
+        },
+        fontFamily: {
+          headline: ["Noto Serif"],
+          body: ["Manrope"],
+          label: ["Manrope"]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+  }
+  .memory-bloom { border-top-left-radius: 1.5rem; border-bottom-right-radius: 0; }
+  .text-shimmer {
+    background: linear-gradient(45deg, #8c4b55 30%, #ee9da8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Quiz options */
+  .option-btn {
+    width: 100%; text-align: left;
+    padding: 0.85rem 1.2rem; border-radius: 1rem;
+    border: 1.5px solid #d0c5af44; background: #fff8f6;
+    color: #2b1613; font-family: 'Manrope', sans-serif;
+    font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease;
+  }
+  .option-btn:hover:not(:disabled) { border-color: #ee9da8; background: #fff0ee; }
+  .option-btn.correct { background: #d4edda; border-color: #2e7d32; color: #1b5e20; font-weight: 600; }
+  .option-btn.wrong   { background: #ffdad6; border-color: #ba1a1a; color: #93000a; }
+  .option-btn:disabled { cursor: default; }
+
+  /* Progress dots */
+  .progress-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #d0c5af; transition: background 0.3s;
+  }
+  .progress-dot.done    { background: #8c4b55; }
+  .progress-dot.current { background: #ee9da8; outline: 2px solid #8c4b55; outline-offset: 2px; }
+
+  /* Feedback */
+  .feedback-msg {
+    padding: 0.7rem 1.2rem; border-radius: 0.75rem;
+    font-family: 'Manrope', sans-serif; font-size: 0.9rem; font-weight: 600;
+  }
+  .feedback-correct { background: #d4edda; color: #1b5e20; border: 1px solid #a5d6a7; }
+  .feedback-wrong   { background: #ffdad6; color: #93000a; border: 1px solid #ef9a9a; }
+
+  /* Confetti */
+  @keyframes confetti-fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(60px)  rotate(360deg); opacity: 0; }
+  }
+  .confetti-piece {
+    position: absolute; width: 8px; height: 8px; border-radius: 2px;
+    animation: confetti-fall 0.9s ease-out forwards; pointer-events: none;
+  }
+
+  /* Letter reveal animation */
+  @keyframes letter-reveal {
+    from { opacity: 0; transform: translateY(60px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  .letter-reveal {
+    animation: letter-reveal 1s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in-up { animation: fadeInUp 0.8s ease both; }
+  .delay-200  { animation-delay: 0.2s; }
+  .delay-400  { animation-delay: 0.4s; }
+  .delay-600  { animation-delay: 0.6s; }
+  .delay-800  { animation-delay: 0.8s; }
+  .delay-1000 { animation-delay: 1.0s; }
+  .delay-1200 { animation-delay: 1.2s; }
+
+  /* Divider ornament */
+  .ornament {
+    display: flex; align-items: center; gap: 1rem; margin: 2.5rem 0;
+  }
+  .ornament::before, .ornament::after {
+    content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, #ee9da8, transparent);
+  }
+</style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- ════════════════════ MUSIC PLAYER ════════════════════ -->
+<audio id="bg-audio" loop preload="auto">
+  <source src="audios/ter o coração no chão.mp3" type="audio/mpeg"/>
+</audio>
+
+<div id="music-player">
+  <!-- Disc -->
+  <div id="mp-disc">
+    <span class="material-symbols-outlined" style="color:#fff; font-size:18px; font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">music_note</span>
+  </div>
+
+  <!-- Center: info + progress -->
+  <div id="mp-center">
+    <div id="mp-info">
+      <p id="mp-title">Ter o Coração no Chão</p>
+      <p id="mp-artist">Ana Vitória</p>
+    </div>
+    <div id="mp-progress-row">
+      <span id="mp-current">0:00</span>
+      <div id="mp-bar-track">
+        <div id="mp-bar-fill"></div>
+      </div>
+      <span id="mp-total">0:00</span>
+    </div>
+  </div>
+
+  <!-- Right: play + volume -->
+  <div id="mp-right">
+    <button id="mp-play" onclick="mpTogglePlay()">
+      <span id="mp-play-icon" class="material-symbols-outlined" style="color:#fff; font-size:18px; font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">play_arrow</span>
+    </button>
+    <div id="mp-volume-wrap">
+      <span class="material-symbols-outlined" style="color:#8c4b55; font-size:15px; font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24; flex-shrink:0;">volume_down</span>
+      <input id="mp-volume" type="range" min="0" max="1" step="0.01" value="0.05" oninput="mpSetVolume(this.value)">
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Music Player Base ── */
+  #music-player {
+    position: fixed; z-index: 9999;
+    background: rgba(255,248,246,0.88);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(238,157,168,0.25);
+    box-shadow: 0 8px 32px rgba(140,75,85,0.13), 0 1.5px 6px rgba(140,75,85,0.07);
+    display: flex; align-items: center;
+    transition: opacity 0.4s;
+  }
+
+  #mp-disc {
+    border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg,#8c4b55,#ee9da8);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(140,75,85,0.25);
+  }
+
+  #mp-title {
+    margin: 0; font-family: 'Noto Serif', serif; font-style: italic;
+    color: #8c4b55; white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; font-weight: 600;
+  }
+  #mp-artist {
+    margin: 0; font-family: 'Manrope', sans-serif; color: #675d4d; opacity: 0.8;
+  }
+
+  #mp-progress-row {
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  #mp-progress-row span {
+    font-family: 'Manrope', sans-serif; color: #675d4d; min-width: 26px;
+  }
+  #mp-bar-track {
+    flex: 1; height: 3px; background: rgba(208,197,175,0.4);
+    border-radius: 99px; cursor: pointer; position: relative;
+  }
+  #mp-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(to right,#8c4b55,#ee9da8);
+    border-radius: 99px; pointer-events: none;
+  }
+  #mp-current { text-align: left; }
+  #mp-total   { text-align: right; }
+
+  #mp-play {
+    border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(135deg,#8c4b55,#ee9da8);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(140,75,85,0.25); flex-shrink: 0;
+  }
+
+  #mp-volume-wrap {
+    display: flex; align-items: center; gap: 0.35rem;
+  }
+  #mp-volume {
+    height: 3px; -webkit-appearance: none; appearance: none;
+    background: linear-gradient(to right,#8c4b55 5%,rgba(208,197,175,0.4) 5%);
+    border-radius: 99px; cursor: pointer; outline: none;
+  }
+  #mp-volume::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #8c4b55; cursor: pointer;
+    box-shadow: 0 1px 4px rgba(140,75,85,0.3);
+  }
+  #mp-volume::-moz-range-thumb {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #8c4b55; cursor: pointer; border: none;
+  }
+
+  @keyframes mp-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .mp-spinning { animation: mp-spin 4s linear infinite; }
+
+  /* ── Desktop: card no canto ── */
+  @media (min-width: 641px) {
+    #music-player {
+      bottom: 1.5rem; right: 1.5rem;
+      border-radius: 1.25rem;
+      padding: 0.75rem 1rem;
+      flex-direction: row; gap: 0.65rem;
+      min-width: 240px; max-width: 280px;
+    }
+    #mp-disc { width: 36px; height: 36px; }
+    #mp-center { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+    #mp-info { display: flex; flex-direction: column; }
+    #mp-title { font-size: 0.72rem; }
+    #mp-artist { font-size: 0.63rem; }
+    #mp-progress-row span { font-size: 0.6rem; }
+    #mp-right { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+    #mp-play { width: 34px; height: 34px; }
+    #mp-volume-wrap { display: flex; align-items: center; gap: 0.3rem; }
+    #mp-volume { width: 55px; }
+  }
+
+  /* ── Mobile: barra no fundo ── */
+  @media (max-width: 640px) {
+    #music-player {
+      left: 0; right: 0; bottom: 0;
+      border-radius: 1rem 1rem 0 0;
+      padding: 0.6rem 1rem;
+      flex-direction: row; gap: 0.75rem;
+      min-width: unset; max-width: unset; width: 100%;
+      border-left: none; border-right: none; border-bottom: none;
+    }
+    #mp-disc { width: 32px; height: 32px; }
+    #mp-center { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+    #mp-info { display: flex; flex-direction: column; }
+    #mp-title { font-size: 0.7rem; }
+    #mp-artist { font-size: 0.6rem; }
+    #mp-progress-row span { font-size: 0.58rem; min-width: 22px; }
+    #mp-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    #mp-play { width: 36px; height: 36px; }
+    #mp-volume-wrap { display: none; }
+  }
+</style>
+
+<script>
+  const audio = document.getElementById('bg-audio');
+  const playIcon = document.getElementById('mp-play-icon');
+  const disc = document.getElementById('mp-disc');
+  const barFill = document.getElementById('mp-bar-fill');
+  const barTrack = document.getElementById('mp-bar-track');
+  const currentEl = document.getElementById('mp-current');
+  const totalEl = document.getElementById('mp-total');
+  const volSlider = document.getElementById('mp-volume');
+
+  audio.volume = 0.05;
+
+  function mpFmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function mpTogglePlay() {
+    if (audio.paused) {
+      audio.play();
+      playIcon.textContent = 'pause';
+      disc.classList.add('mp-spinning');
+    } else {
+      audio.pause();
+      playIcon.textContent = 'play_arrow';
+      disc.classList.remove('mp-spinning');
+    }
+  }
+
+  function mpSetVolume(v) {
+    audio.volume = v;
+    const pct = v * 100;
+    volSlider.style.background = `linear-gradient(to right,#8c4b55 ${pct}%,rgba(208,197,175,0.4) ${pct}%)`;
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    barFill.style.width = pct + '%';
+    currentEl.textContent = mpFmt(audio.currentTime);
+  });
+
+  audio.addEventListener('loadedmetadata', () => {
+    totalEl.textContent = mpFmt(audio.duration);
+  });
+
+  barTrack.addEventListener('click', e => {
+    const rect = barTrack.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pct * audio.duration;
+  });
+
+  // Auto-play on first user interaction
+  document.addEventListener('click', function startAudio() {
+    if (audio.paused) {
+      audio.play().then(() => {
+        playIcon.textContent = 'pause';
+        disc.classList.add('mp-spinning');
+      }).catch(() => {});
+    }
+    document.removeEventListener('click', startAudio);
+  }, { once: true });
+</script>
+
+<!-- Nav placeholder -->
+<nav class="sticky top-0 w-full z-50 bg-[#fff8f6]/60 backdrop-blur-xl shadow-[0_20px_40px_rgba(43,22,19,0.06)]"></nav>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden px-6" id="hero">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-surface-container-low via-background to-background"></div>
+  <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-container/10 rounded-full blur-[120px]"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-surface-tint/5 rounded-full blur-[120px]"></div>
+  <div class="relative z-10 text-center max-w-4xl mx-auto">
+    <h1 class="font-headline text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-on-surface leading-tight mb-8 tracking-tighter">
+      Feliz Aniversário, <br/>
+      <span class="italic font-normal text-shimmer">meu amor</span>
+    </h1>
+    <p class="font-body text-base sm:text-lg md:text-xl text-secondary max-w-2xl mx-auto mb-12 leading-relaxed">
+        Um presente diferente de todos os outros, feito pra durar pra sempre. Espero que cada parte te faça sorrir pichuca, porque foi tudo pensado com muito amor. Te amo, minha gatinha. 💗</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <a class="w-full sm:w-auto text-center px-10 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-full font-semibold shadow-lg shadow-primary/20 hover:scale-105 transition-transform" href="#quiz">
+        Fazer o Quiz
+      </a>
+      <a class="w-full sm:w-auto text-center px-10 py-4 border border-outline-variant/30 text-primary rounded-full font-semibold hover:bg-surface-container-low transition-colors" href="#gallery">
+        Ver nossas Memórias
+      </a>
+    </div>
+  </div>
+  <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary/40">
+    <span class="text-xs tracking-widest uppercase font-label">Role para explorar</span>
+    <span class="material-symbols-outlined animate-bounce">expand_more</span>
+  </div>
+</section>
+
+<!-- ════════════════════ GALLERY ════════════════════ -->
+<section class="py-20 sm:py-24 bg-surface-container-low" id="gallery">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8">
+    <div class="mb-12 sm:mb-16">
+      <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl text-on-surface mb-4">Nossos momentos favoritos</h2>
+      <p class="text-secondary font-body text-base sm:text-lg">Momentos especiais que guardo no coração.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:h-[800px]">
+      <div class="sm:col-span-2 md:row-span-2 relative group overflow-hidden memory-bloom shadow-xl min-h-[260px] sm:min-h-[340px]">
+        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/imagem1.JPG" alt=""/>
+        <div class="absolute inset-0 bg-gradient-to-t from-on-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+        </div>
+      </div>
+      <div class="sm:col-span-2 md:col-span-2 md:row-span-1 relative group overflow-hidden rounded-xl shadow-lg min-h-[200px]">
+        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/imagem2.JPG" alt=""/>
+        <div class="absolute inset-0 bg-gradient-to-t from-on-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+        </div>
+      </div>
+      <div class="md:col-span-1 md:row-span-1 relative group overflow-hidden rounded-xl shadow-lg min-h-[180px]">
+        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/imagem3.jpg" alt=""/>
+        <div class="absolute inset-0 bg-gradient-to-t from-on-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+        </div>
+      </div>
+      <div class="md:col-span-1 md:row-span-1 relative group overflow-hidden rounded-xl shadow-lg min-h-[180px]">
+        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/imagem4.jpg" alt=""/>
+        <div class="absolute inset-0 bg-gradient-to-t from-on-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ TIMELINE ════════════════════ -->
+<section class="py-20 sm:py-24 bg-surface overflow-hidden" id="timeline">
+  <div class="max-w-5xl mx-auto px-4 sm:px-8 relative">
+    <div class="text-center mb-16 sm:mb-20">
+      <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl text-on-surface mb-6">Nossa História</h2>
+      <div class="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"></div>
+    </div>
+    <div class="relative border-l-2 border-primary-container/40 ml-4 md:ml-0 md:left-1/2">
+      <div class="mb-14 relative">
+        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-surface shadow-sm"></div>
+        <div class="ml-8 md:ml-0 md:w-1/2 md:pr-12 md:text-right md:translate-x-[-100%]">
+          <span class="font-headline italic text-xl sm:text-2xl text-primary block mb-2">Primeiro Encontro</span>
+          <p class="font-label text-xs text-secondary uppercase tracking-widest mb-3">27 de Fevereiro de 2025</p>
+          <p class="text-on-surface leading-relaxed text-sm sm:text-base">O dia que montamos o poke um do outro e depois fomos tomar sorvete, esse foi o dia que eu pude conhecer melhor o amor da minha vida!</p>
+        </div>
+      </div>
+      <div class="mb-14 relative">
+        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-surface shadow-sm"></div>
+        <div class="ml-8 md:ml-0 md:w-1/2 md:pl-12">
+          <span class="font-headline italic text-xl sm:text-2xl text-primary block mb-2">Hopi Hari</span>
+          <p class="font-label text-xs text-secondary uppercase tracking-widest mb-3">22 de Março de 2025</p>
+          <p class="text-on-surface leading-relaxed text-sm sm:text-base">Uma memória muito feliz. Cada momento, cada risada com você lá me fez perceber o quanto sua companhia me fazia bem, o quanto você me fazia feliz, e o quanto eu queria ter você pra sempre comigo.</p>
+        </div>
+      </div>
+      <div class="mb-14 relative">
+        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-surface shadow-sm"></div>
+        <div class="ml-8 md:ml-0 md:w-1/2 md:pr-12 md:text-right md:translate-x-[-100%]">
+          <span class="font-headline italic text-xl sm:text-2xl text-primary block mb-2">Primeiro Beijo</span>
+          <p class="font-label text-xs text-secondary uppercase tracking-widest mb-3">02 de abril de 2025</p>
+          <p class="text-on-surface leading-relaxed text-sm sm:text-base">O dia que eu fui convidado pra comer pizza e assistir beleza fatal. Uma memória muito gostosa de lembrar. Nunca vou esquecer o quanto eu gritei de felicidade naquele carro depois que eu sai da sua casa.</p>
+        </div>
+      </div>
+      <div class="mb-14 relative">
+        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-surface shadow-sm"></div>
+        <div class="ml-8 md:ml-0 md:w-1/2 md:pl-12">
+          <span class="font-headline italic text-xl sm:text-2xl text-primary block mb-2">Pedido de Namoro</span>
+          <p class="font-label text-xs text-secondary uppercase tracking-widest mb-3">03 de Maio de 2025</p>
+          <p class="text-on-surface leading-relaxed text-sm sm:text-base">Sem dúvidas o momento mais especial da minha vida até hoje, o dia que nós escolhemos dividir a vida juntos. Tudo naquele dia foi perfeito, poder ver o por do sol sentadinho naquela toalha com você, pintar aqueles quadrinhos, saber que eu ia ter aquele sorrisinho lindoooo pra sempre olhando pra mim, aquilo enche meu olho de lágrima até hoje.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ QUIZ ════════════════════ -->
+<section class="py-20 sm:py-28 bg-surface-container-low relative" id="quiz">
+  <div class="absolute top-0 left-0 w-80 h-80 bg-primary-container/10 rounded-full blur-[100px] pointer-events-none"></div>
+  <div class="absolute bottom-0 right-0 w-80 h-80 bg-surface-tint/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+  <div class="relative max-w-2xl mx-auto px-4 sm:px-8">
+    <div class="text-center mb-12">
+      <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl text-on-surface mt-3 mb-4">Quiz da gigi</h2>
+      <p class="text-secondary text-base">Responda o quiz para desbloquear minha carta 💌</p>
+    </div>
+
+    <!-- Quiz card -->
+    <div class="bg-surface rounded-[2rem] shadow-xl border border-outline-variant/10 px-6 py-10 sm:px-10 sm:py-12" id="quiz-card">
+
+      <!-- Progress dots -->
+      <div class="flex justify-center gap-2 mb-8" id="progress-dots"></div>
+
+      <!-- Question area -->
+      <div id="question-area">
+        <p class="font-headline italic text-xl sm:text-2xl text-on-surface mb-8 leading-snug text-center" id="question-text"></p>
+        <div class="flex flex-col gap-3" id="options-area"></div>
+        <div class="mt-5" id="feedback-area"></div>
+        <div class="flex justify-end mt-8" id="next-btn-area"></div>
+      </div>
+
+      <!-- Result screen (hidden initially) -->
+      <div class="hidden text-center" id="result-screen">
+        <div class="text-5xl mb-4" id="result-emoji">💗</div>
+        <p class="font-headline italic text-2xl sm:text-3xl text-primary mb-3" id="result-title"></p>
+        <p class="font-body text-secondary text-base sm:text-lg mb-8 leading-relaxed" id="result-msg"></p>
+        <button class="px-10 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-full font-semibold shadow-lg shadow-primary/20 hover:scale-105 transition-transform" id="reveal-btn">
+          Ler minha carta 💌
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CARTA (oculta até quiz terminar) ════════════════════ -->
+<section class="py-20 sm:py-28 bg-surface relative hidden" id="letter">
+  <div class="absolute top-0 left-0 w-80 h-80 bg-primary-container/10 rounded-full blur-[100px] pointer-events-none"></div>
+  <div class="absolute bottom-0 right-0 w-80 h-80 bg-surface-tint/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+  <div class="relative max-w-3xl mx-auto px-4 sm:px-8">
+
+    <!-- Título da seção -->
+    <div class="text-center mb-14 letter-reveal fade-in-up">
+      <span class="font-label text-xs text-secondary uppercase tracking-widest">Com todo meu amor</span>
+      <h2 class="font-headline text-4xl sm:text-5xl md:text-6xl text-on-surface mt-3 leading-tight">
+        Minha <span class="italic text-shimmer">cartinha</span>
+      </h2>
+      <div class="ornament mt-6">
+        <span class="font-headline italic text-primary-container text-xl">💗</span>
+      </div>
+    </div>
+
+    <!-- Carta -->
+    <div class="bg-surface-container-lowest rounded-[2rem] shadow-2xl border border-outline-variant/10 px-8 py-14 sm:px-16 sm:py-20 letter-reveal">
+
+      <!-- Greeting -->
+      <p class="font-headline italic text-4xl sm:text-6xl text-primary mb-12 leading-tight fade-in-up delay-200">Para meu neném,</p>
+
+      <!-- Divider -->
+      <div class="ornament fade-in-up delay-400"></div>
+
+      <!-- Body -->
+      <div class="font-body text-on-surface text-lg sm:text-xl leading-[2.1] space-y-9">
+        <p class="fade-in-up delay-400">Faz uns dias que já venho pensando sobre o que deveria escrever, mas acho que não existe melhor forma do que contando nossa história.</p>
+
+        <p class="fade-in-up delay-600">Desde o dia que te conheci, você nunca mais saiu da minha cabeça. Desde o começo me conquistou com esse seu jeitinho meigo, engraçado e feliz que só você tem meu amor, jamais imaginei que existisse um amor assim, tão forte e tão gostoso de viver. Dividir a vida com você tem sido a melhor experiência da minha vida, e eu faço questão de guardar cada momento nosso, porque lembrar deles me faz muito feliz.</p>
+
+        <p class="fade-in-up delay-800">Sinto muito orgulho de tudo que você vem conquistando também meu amor, toda sua luta, todo seu esforço. Tenho certeza de que a vida ainda reserva coisas lindas pra você, e espero estar junto com você em todas elas, pra o que precisar. Você é muito mais forte do que imagina, nunca se esqueça disso.</p>
+
+        <!-- Destaque especial -->
+        <div class="my-10 px-6 py-8 bg-surface-container rounded-2xl border-l-4 border-primary fade-in-up delay-1000">
+          <p class="font-headline italic text-2xl sm:text-3xl text-primary leading-snug">
+            "Você é a pessoa mais importante da minha vida."
+          </p>
+        </div>
+
+        <p class="fade-in-up delay-1000">Sou completamente apaixonado por você e sempre vou fazer de TUDO pra tentar evidenciar isso, porque você não merece menos que isso minha gatinha. Você é a pessoa mais importante da minha vida. Hoje minha namorada, mas futuramente será minha esposa, e depois ainda a mãe dos meus filhos. Eles ficarão orgulhosos da Mãe que tem. Você é como uma manhã de sábado ensolarada, como um abraço quentinho no frio. Você é e sempre vai ser meu porto seguro, meu momento de paz.</p>
+
+        <p class="fade-in-up delay-1200">Eu te amo mais que tudo nessa vida, e vou continuar amando pra sempre, faço questão que você saiba disso todos os dias, nos detalhes, nas atitudes e em tudo que eu puder fazer por nós.</p>
+      </div>
+
+      <!-- Divider ornamental -->
+      <div class="ornament fade-in-up delay-1200 mt-10"></div>
+
+      <!-- Sign-off -->
+      <div class="mt-8 flex flex-col items-end gap-2 fade-in-up delay-1200">
+        <p class="font-headline italic text-2xl sm:text-3xl text-secondary/60">Com todo meu amor,</p>
+        <p class="font-headline italic text-4xl sm:text-6xl text-primary">Pedro 💗</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer class="bg-surface-container-low w-full py-16 px-6 border-t border-outline-variant/20">
+  <div class="max-w-xl mx-auto text-center">
+    <span class="font-headline italic text-2xl sm:text-3xl text-primary block mb-5">Te amo pra sempre meu amor</span>
+    <p class="font-body text-secondary leading-relaxed text-base sm:text-lg">
+      "tem sentimentos que a gente só conhece uma vez na vida, e definitivamente é esse que sinto por você"
+    </p>
+    <div class="mt-8 w-16 h-px bg-gradient-to-r from-transparent via-primary-container to-transparent mx-auto"></div>
+    <p class="font-label text-xs text-secondary/50 tracking-widest uppercase mt-5">Feito com amor - Pedro</p>
+  </div>
+</footer>
+
+<script>
+  const questions = [
+    {
+      q: "Qual foi o nosso primeiro date sozinhos?",
+      opts: ["Cinema", "Poke e sorvete", "Sair pra comer cookie", "Passeio de barco nas cataratas do iguaçu"],
+      correct: 1,
+      feedbackRight: "O dia que a gente montou o poke um do outro, mandou bem amor!",
+      feedbackWrong: "affffff como assim você não lembra do nosso primeiro date"
+    },
+    {
+      q: "Quem é o mais tidinho?",
+      opts: ["Giovana", "Pedro"],
+      correct: 1,
+      feedbackRight: "affff sou mesmo 😔😔😔",
+      feedbackWrong: "Oloco, ai viajou!"
+    },
+    {
+      q: "Quem é mais bicudinho?",
+      opts: ["Giovana", "Pedro"],
+      correct: 0,
+      feedbackRight: "Minha bicudinhaaaa, te amoooo 💗",
+      feedbackWrong: "Viajo!"
+    },
+    {
+      q: "O que mais conversamos sobre o futuro?",
+      opts: ["Viajar o mundo", "Casar e morar juntos", "Construir uma família"],
+      correct: 1,
+      feedbackRight: "Não vejo a hora de ter um cantinho e minha esposa todo diaaa",
+      feedbackWrong: "Hmmmm, to de olho 👀"
+    }
+  ];
+
+  let current = 0;
+  let score = 0;
+  let answered = false;
+
+  const dotsEl      = document.getElementById('progress-dots');
+  const questionEl  = document.getElementById('question-text');
+  const optionsEl   = document.getElementById('options-area');
+  const feedbackEl  = document.getElementById('feedback-area');
+  const nextBtnArea = document.getElementById('next-btn-area');
+  const questionArea = document.getElementById('question-area');
+  const resultScreen = document.getElementById('result-screen');
+
+  function renderDots() {
+    dotsEl.innerHTML = '';
+    questions.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'progress-dot' +
+        (i < current ? ' done' : '') +
+        (i === current ? ' current' : '');
+      dotsEl.appendChild(d);
+    });
+  }
+
+  function renderQuestion() {
+    answered = false;
+    feedbackEl.innerHTML = '';
+    nextBtnArea.innerHTML = '';
+
+    const q = questions[current];
+    questionEl.textContent = q.q;
+
+    optionsEl.innerHTML = '';
+    q.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => handleAnswer(i, btn));
+      optionsEl.appendChild(btn);
+    });
+
+    renderDots();
+  }
+
+  function handleAnswer(idx, btn) {
+    if (answered) return;
+    answered = true;
+
+    const q = questions[current];
+    const allBtns = optionsEl.querySelectorAll('.option-btn');
+    allBtns.forEach(b => b.disabled = true);
+
+    if (idx === q.correct) {
+      btn.classList.add('correct');
+      score++;
+      feedbackEl.innerHTML = `<div class="feedback-msg feedback-correct">✓ ${q.feedbackRight}</div>`;
+      spawnConfetti(btn);
+    } else {
+      btn.classList.add('wrong');
+      allBtns[q.correct].classList.add('correct');
+      feedbackEl.innerHTML = `<div class="feedback-msg feedback-wrong">✗ ${q.feedbackWrong}</div>`;
+    }
+
+    const isLast = current === questions.length - 1;
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-full font-semibold text-sm shadow-md shadow-primary/20 hover:scale-105 transition-transform';
+    nextBtn.textContent = isLast ? 'Ver resultado 💌' : 'Próxima →';
+    nextBtn.addEventListener('click', () => {
+      current++;
+      if (current < questions.length) {
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    });
+    nextBtnArea.appendChild(nextBtn);
+  }
+
+  function showResult() {
+    questionArea.classList.add('hidden');
+    resultScreen.classList.remove('hidden');
+    renderDots();
+
+    const pct = score / questions.length;
+    let emoji, title, msg;
+
+    if (pct === 1) {
+      emoji = '💗'; title = 'Parabéns!';
+      msg = `Muito bem meu amor. Acertou tudo. Desbloqueei sua carta, só clicar pra ver 💗`;
+    }
+
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-msg').textContent = msg;
+
+    document.getElementById('reveal-btn').addEventListener('click', revealLetter);
+  }
+
+  function revealLetter() {
+    const letterSection = document.getElementById('letter');
+    letterSection.classList.remove('hidden');
+
+    // Scroll suave até a carta depois de um breve delay
+    setTimeout(() => {
+      letterSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  }
+
+  function spawnConfetti(anchor) {
+    const colors = ['#8c4b55','#ee9da8','#ffd9dd','#675d4d','#f0e0cc'];
+    const rect = anchor.getBoundingClientRect();
+    const container = anchor.parentElement;
+    for (let i = 0; i < 18; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.cssText = `
+        left: ${Math.random() * 100}%;
+        top: 0;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        animation-delay: ${Math.random() * 0.3}s;
+        animation-duration: ${0.7 + Math.random() * 0.5}s;
+      `;
+      container.style.position = 'relative';
+      container.appendChild(piece);
+      setTimeout(() => piece.remove(), 1200);
+    }
+  }
+
+  renderQuestion();
+</script>
+</body>
+</html>
